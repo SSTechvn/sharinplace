@@ -83,6 +83,7 @@
     "js-yaml": "3.11.0",
     "jsonwebtoken": "5.7.0",
     "knex": "0.14.2",
+    "knex-migrator": "3.1.5",
     "lodash": "3.10.1",
     "make-dir": "1.0.0",
     "mandrill-api": "1.0.45",
@@ -134,6 +135,7 @@
     "lint:server": "eslint .",
     "lint:client": "cd assets && eslint .",
     "clean:emailTests": "rm emailTests/*.html",
-    "translate": "node scripts/buildTranslations.js"
+    "translate": "node scripts/buildTranslations.js",
+    "knex-migrator": "knex-migrator"
   }
 }
