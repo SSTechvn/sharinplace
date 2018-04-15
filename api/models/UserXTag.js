@@ -27,15 +27,18 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             required: true,
-            // index: true,
         },
         tagId: {
             type: 'number',
             columnType: 'int',
             required: true,
-            // index: true,
         },
     },
+
+    indexes: [
+        'userId',
+        'tagId',
+    ],
 
 };
 

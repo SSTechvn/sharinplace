@@ -26,7 +26,6 @@ module.exports = {
         transactionId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
         },
         credit: {
             type: 'number',
@@ -59,7 +58,11 @@ module.exports = {
             columnType: 'json',
             defaultsTo: {},
         },
-    }
+    },
+
+    indexes: [
+        'transactionId',
+    ],
 
 };
 

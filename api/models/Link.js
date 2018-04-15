@@ -26,7 +26,6 @@ module.exports = {
         fromUserId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             required: true,
         },
         relationship: {
@@ -38,7 +37,6 @@ module.exports = {
         toUserId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             required: true,
         },
         validated: {
@@ -49,7 +47,6 @@ module.exports = {
         email: {
             type: 'string',
             columnType: 'varchar(191) CHARACTER SET utf8mb4',
-            // index: true,
             maxLength: 191,
             allowNull: true,
         },
@@ -65,6 +62,12 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'fromUserId',
+        'toUserId',
+        'email',
+    ],
 
     get: get
 

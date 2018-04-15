@@ -45,31 +45,26 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         startBookingId: {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         endBookingId: {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         ownerId: {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         takerId: {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         signToken: {
             type: 'string',
@@ -87,7 +82,6 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         data: {
             type: 'json',
@@ -95,6 +89,15 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'listingId',
+        'startBookingId',
+        'endBookingId',
+        'ownerId',
+        'takerId',
+        'cancellationId',
+    ],
 
     getAccessFields,
     beforeCreate,

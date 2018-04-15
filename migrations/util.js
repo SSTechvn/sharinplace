@@ -3,13 +3,19 @@ module.exports = {
     getModels,
     getModelAttributes,
     getIndexName,
+    getColumnName,
 
     addTableColumn,
-    getColumnName,
+    addTableIndex,
+
     createTable,
     addColumns,
+    addIndexes,
+
     dropTable,
     dropColumns,
+    dropIndexes,
+
     getIndexes,
     getIndexesKeyNames,
 
@@ -18,6 +24,7 @@ module.exports = {
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
+const Promise = require('bluebird');
 
 const modelsPath = path.join(__dirname, '../api/models');
 
@@ -58,8 +65,22 @@ function getModelAttributes(model) {
     return attributes;
 }
 
-function getIndexName(tableName, columnNames) {
-    return tableName + '_' + columnNames.join('_') + '_index';
+function getModelIndexes(model) {
+    const { definition: { indexes } } = model;
+    return indexes;
+}
+
+function getIndexName(tableName, field, attributes) {
+    const columnName = getColumnName(field, attributes);
+    if (!columnName) return;
+
+    return `${tableName}_${columnName}_index`;
+}
+
+function getColumnName(field, attributes) {
+    if (!attributes[field]) return;
+
+    return attributes[field].columnName || field;
 }
 
 /**
@@ -93,10 +114,23 @@ function addTableColumn(model, field, table) {
     }
 }
 
-function getColumnName(field, attributes) {
-    if (!attributes[field]) return;
+/**
+ * Define a table index
+ * @param {Object} model
+ * @param {String} field
+ * @param {Object} table
+ */
+function addTableIndex(model, field, table) {
+    const attributes = getModelAttributes(model);
 
-    return attributes[field].columnName || field;
+    const columnName = getColumnName(field, attributes);
+    if (!columnName) {
+        throw new Error(`Unknown field: ${model.tableName}.${field}`);
+    }
+
+    const indexName = getIndexName(model.tableName, field, attributes);
+
+    table.index(columnName, indexName);
 }
 
 /**
@@ -118,11 +152,18 @@ async function createTable(modelName, connection) {
 
     const attributes = getModelAttributes(model);
     const fields = Object.keys(attributes);
+    const modelIndexes = getModelIndexes(model);
 
     await connection.schema.createTable(model.tableName, table => {
         fields.forEach(field => {
             addTableColumn(model, field, table);
         });
+
+        if (modelIndexes && modelIndexes.length) {
+            modelIndexes.forEach(indexField => {
+                addTableIndex(model, indexField, table);
+            });
+        }
     });
 }
 
@@ -160,6 +201,47 @@ async function addColumns(modelName, fields, connection) {
 
         await connection.schema.table(model.tableName, table => {
             addTableColumn(model, field, table);
+        });
+    });
+}
+
+/**
+ * Create index on a table
+ * @param {String} modelName
+ * @param {String[]} indexes
+ * @param {Object} connection
+ */
+async function addIndexes(modelName, indexes, connection) {
+    const indexedModels = getIndexedModels();
+
+    const model = indexedModels[modelName];
+    if (!model) {
+        throw new Error(`Unknown model: ${modelName}`);
+    }
+
+    // The table must exist
+    const exists = await connection.schema.hasTable(model.tableName);
+    if (!exists) {
+        throw new Error(`Nonexistent table: ${model.tableName}`);
+    }
+
+    const attributes = getModelAttributes(model);
+
+    const tableIndexes = await getIndexesKeyNames(model.tableName, connection);
+    const hashTableIndexes = _.indexBy(tableIndexes);
+
+    // Check the indexes existence and create the nonexistent ones
+    return Promise.mapSeries(indexes, async (field) => {
+        const indexName = getIndexName(model.tableName, field, attributes);
+        if (!indexName) {
+            throw new Error(`Unknown field: ${model.name}.${field}`);
+        }
+
+        const existsIndex = hashTableIndexes[indexName];
+        if (existsIndex) return;
+
+        await connection.schema.table(model.tableName, table => {
+            addTableIndex(model, field, table);
         });
     });
 }
@@ -218,6 +300,49 @@ async function dropColumns(modelName, fields, connection) {
 
         await connection.schema.table(model.tableName, table => {
             table.dropColumn(columnName);
+        });
+    });
+}
+
+/**
+ * Drop indexes on a table
+ * @param {String} modelName
+ * @param {String[]} indexes
+ * @param {Object} connection
+ */
+async function dropIndexes(modelName, indexes, connection) {
+    const indexedModels = getIndexedModels();
+
+    const model = indexedModels[modelName];
+    if (!model) {
+        throw new Error(`Unknown model: ${modelName}`);
+    }
+
+    // The table must exist
+    const exists = await connection.schema.hasTable(model.tableName);
+    if (!exists) {
+        throw new Error(`Nonexistent table: ${model.tableName}`);
+    }
+
+    const attributes = getModelAttributes(model);
+
+    const tableIndexes = await getIndexesKeyNames(model.tableName, connection);
+    const hashTableIndexes = _.indexBy(tableIndexes);
+
+    // Check the indexes existence and drop the existing ones
+    return Promise.mapSeries(indexes, async (field) => {
+        const indexName = getIndexName(model.tableName, field, attributes);
+        if (!indexName) {
+            throw new Error(`Unknown field: ${model.name}.${field}`);
+        }
+
+        const columnName = getColumnName(field, attributes);
+
+        const existsIndex = hashTableIndexes[indexName];
+        if (!existsIndex) return;
+
+        await connection.schema.table(model.tableName, table => {
+            table.dropIndex(columnName, indexName);
         });
     });
 }

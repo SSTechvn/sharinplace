@@ -49,7 +49,6 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             required: true,
-            // index: true,
         },
         nbViews: {
             type: 'number',
@@ -93,7 +92,6 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         reference: {
             type: 'string',
@@ -105,7 +103,6 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         mediasIds: {
             type: 'json',
@@ -230,6 +227,11 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'ownerId',
+        'listingCategoryId',
+    ],
 
     getAccessFields,
     getI18nMap,

@@ -25,13 +25,11 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             required: true,
-            // index: true,
         },
         sessionId: {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         type: {
             type: 'string',
@@ -73,6 +71,11 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'userId',
+        'sessionId',
+    ],
 
     get: get,
     getAccessFields: getAccessFields

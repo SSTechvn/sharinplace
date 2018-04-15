@@ -53,7 +53,6 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         field: {
             type: 'string',
@@ -104,6 +103,10 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'userId',
+    ],
 
     getAccessFields,
     exposeTransform,

@@ -27,7 +27,6 @@ module.exports = {
             type: 'string',
             columnType: 'varchar(191)',
             allowNull: true,
-            // index: true,
             maxLength: 191,
         },
         info: {
@@ -41,6 +40,10 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'mandrillMessageId',
+    ],
 
 };
 

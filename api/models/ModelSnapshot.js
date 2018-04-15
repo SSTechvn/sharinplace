@@ -29,13 +29,11 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             required: true,
-            // index: true,
         },
         targetType: {
             type: 'string',
             columnType: 'varchar(191)',
             maxLength: 191,
-            // index: true,
         },
         data: {
             type: 'json',
@@ -43,6 +41,10 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'targetId',
+    ],
 
     get: get,
 

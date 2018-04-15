@@ -34,12 +34,10 @@ module.exports = {
             columnType: 'varchar(191)',
             required: true,
             maxLength: 191,
-            // index: true,
         },
         userId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             allowNull: true,
         },
         targetType: {
@@ -70,7 +68,12 @@ module.exports = {
             allowNull: true,
             maxLength: 255,
         },
-    }
+    },
+
+    indexes: [
+        'value',
+        'userId',
+    ],
 
 };
 

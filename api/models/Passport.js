@@ -93,10 +93,13 @@ module.exports = {
         user: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             required: true,
         },
     },
+
+    indexes: [
+        'user',
+    ],
 
     /**
      * Validate password used by the local strategy.

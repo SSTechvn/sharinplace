@@ -39,7 +39,6 @@ module.exports = {
         parentId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             allowNull: true,
         },
         data: {
@@ -48,6 +47,10 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'parentId',
+    ],
 
     getAccessFields,
     getI18nMap,

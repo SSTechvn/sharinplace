@@ -27,7 +27,6 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         reasonType: {
             type: 'string',
@@ -45,20 +44,17 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         takerId: {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         trigger: {
             type: 'string',
             columnType: 'varchar(255)',
             allowNull: true,
             maxLength: 255,
-            // index: true,
         },
         refundDate: {
             type: 'string',
@@ -72,6 +68,12 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'listingId',
+        'ownerId',
+        'takerId',
+    ],
 
     getAccessFields: getAccessFields,
     get: get

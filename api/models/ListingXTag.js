@@ -26,16 +26,19 @@ module.exports = {
         listingId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             required: true,
         },
         tagId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             required: true,
         },
-    }
+    },
+
+    indexes: [
+        'listingId',
+        'tagId',
+    ],
 
 };
 

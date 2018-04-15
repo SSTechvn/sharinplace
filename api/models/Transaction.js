@@ -40,12 +40,10 @@ module.exports = {
         fromUserId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
         },
         toUserId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
         },
         paymentData: {
             type: 'json',
@@ -85,7 +83,6 @@ module.exports = {
         bookingId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             required: true,
         },
         resourceType: {
@@ -122,7 +119,6 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         action: {
             type: 'string',
@@ -142,6 +138,13 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'fromUserId',
+        'toUserId',
+        'bookingId',
+        'cancelTransactionId',
+    ],
 
     isPreauthorizationCancellable,
 

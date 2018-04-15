@@ -110,7 +110,6 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         establishment: {
             type: 'boolean',
@@ -141,6 +140,10 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'userId',
+    ],
 
     beforeCreate,
     beforeUpdate,

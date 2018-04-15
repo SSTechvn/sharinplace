@@ -28,7 +28,6 @@ module.exports = {
         userId: { // user id, nexmo 'client-ref'
             type: 'number',
             columnType: 'int',
-            // index: true,
             required: true,
         },
         from: {
@@ -151,6 +150,10 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'userId',
+    ],
 
     get: get
 

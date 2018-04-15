@@ -31,13 +31,11 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         listingSnapshotId: {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         listingTypeId: {
             type: 'number',
@@ -73,12 +71,10 @@ module.exports = {
         ownerId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
         },
         takerId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
         },
         quantity: {
             type: 'number',
@@ -227,7 +223,6 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         cancellationPaymentDate: {
             type: 'string',
@@ -263,6 +258,13 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'listingId',
+        'ownerId',
+        'takerId',
+        'cancellationId',
+    ],
 
     getAccessFields,
 

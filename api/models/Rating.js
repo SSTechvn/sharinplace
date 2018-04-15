@@ -40,13 +40,11 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         userId: {
             type: 'number',
             columnType: 'int',
             required: true,
-            // index: true,
         },
         userType: {
             type: 'string',
@@ -69,7 +67,6 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         visibleDate: { // if now is after "visibleDate", then the rating can be visible
             type: 'string',
@@ -83,6 +80,12 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'listingId',
+        'userId',
+        'bookingId',
+    ],
 
     getAccessFields: getAccessFields,
     get: get,

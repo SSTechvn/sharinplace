@@ -29,7 +29,6 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             required: true,
-            // index: true,
         },
         paymentProvider: {  // 'stripe' or 'mangopay'
             type: 'string',
@@ -42,14 +41,12 @@ module.exports = {
             columnType: 'varchar(191)',
             required: true,
             maxLength: 191,
-            // index: true,
         },
         resourceId: {
             type: 'string',
             columnType: 'varchar(191)',
             required: true,
             maxLength: 191,
-            // index: true,
         },
         fingerprint: {
             type: 'string',
@@ -78,6 +75,12 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'userId',
+        'resourceOwnerId',
+        'resourceId',
+    ],
 
     getAccessFields,
     parseMangopayData,

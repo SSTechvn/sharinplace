@@ -27,7 +27,6 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         fromEmail: {
             type: 'string',
@@ -63,7 +62,6 @@ module.exports = {
             type: 'string',
             columnType: 'varchar(191)',
             maxLength: 191,
-            // index: true,
             allowNull: true,
         },
         templateName: {
@@ -104,14 +102,12 @@ module.exports = {
             type: 'string',
             columnType: 'varchar(191)',
             allowNull: true,
-            // index: true,
             maxLength: 191,
         },
         sparkpostTransmissionId: {
             type: 'string',
             columnType: 'varchar(191)',
             allowNull: true,
-            // index: true,
             maxLength: 191,
         },
         html: {
@@ -119,6 +115,13 @@ module.exports = {
             columnType: 'longtext CHARACTER SET utf8mb4',
             allowNull: true,
         },
-    }
+    },
+
+    indexes: [
+        'userId',
+        'specificTemplateName',
+        'mandrillMessageId',
+        'sparkpostTransmissionId',
+    ],
 
 };

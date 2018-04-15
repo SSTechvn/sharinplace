@@ -28,13 +28,11 @@ module.exports = {
         listingId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             required: true,
         },
         userId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             required: true,
         },
         type: {
@@ -87,6 +85,11 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'listingId',
+        'userId',
+    ],
 
     getAccessFields,
     get,

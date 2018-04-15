@@ -27,7 +27,6 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             required: true,
-            // index: true,
         },
         startDate: {
             type: 'string',
@@ -63,6 +62,10 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'listingId',
+    ],
 
     getAccessFields,
     isValidType,

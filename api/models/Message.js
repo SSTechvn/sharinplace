@@ -31,19 +31,16 @@ module.exports = {
         conversationId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             required: true,
         },
         senderId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             required: true,
         },
         receiverId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             required: true,
         },
         privateContent: {
@@ -67,7 +64,6 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         bookingStatus: {
             type: 'string',
@@ -92,6 +88,13 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'conversationId',
+        'senderId',
+        'receiverId',
+        'bookingId',
+    ],
 
     getAccessFields: getAccessFields,
     createMessage: createMessage

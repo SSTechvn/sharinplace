@@ -26,14 +26,12 @@ module.exports = {
         mandrillMessageId: {
             type: 'string',
             columnType: 'varchar(191)',
-            // index: true,
             maxLength: 191,
             allowNull: true,
         },
         sparkpostTransmissionId: {
             type: 'string',
             columnType: 'varchar(191)',
-            // index: true,
             maxLength: 191,
             allowNull: true,
         },
@@ -46,7 +44,6 @@ module.exports = {
         sparkpostBatchId: {
             type: 'string',
             columnType: 'varchar(191)',
-            // index: true,
             maxLength: 191,
             allowNull: true,
         },
@@ -145,6 +142,12 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'mandrillMessageId',
+        'sparkpostTransmissionId',
+        'sparkpostBatchId',
+    ],
 
     getMandrillSignature: getMandrillSignature
 

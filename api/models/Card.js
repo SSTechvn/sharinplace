@@ -36,20 +36,17 @@ module.exports = {
             columnType: 'varchar(191)',
             required: true,
             maxLength: 191,
-            // index: true,
         },
         resourceId: {
             type: 'string',
             columnType: 'varchar(191)',
             required: true,
             maxLength: 191,
-            // index: true,
         },
         userId: {
             type: 'number',
             columnType: 'int',
             required: true,
-            // index: true,
         },
         expirationMonth: {
             type: 'number',
@@ -119,6 +116,12 @@ module.exports = {
             allowNull: true,
         },
     },
+
+    indexes: [
+        'resourceOwnerId',
+        'resourceId',
+        'userId',
+    ],
 
     getAccessFields,
     synchronize,

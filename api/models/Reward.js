@@ -26,7 +26,6 @@ module.exports = {
         userId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             required: true,
         },
         type: {
@@ -75,6 +74,10 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'userId',
+    ],
 
 };
 

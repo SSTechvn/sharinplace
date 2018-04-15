@@ -34,25 +34,21 @@ module.exports = {
         sessionId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             allowNull: true,
         },
         userId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             allowNull: true,
         },
         targetUserId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             allowNull: true,
         },
         listingId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             allowNull: true,
         },
         tagsIds: {
@@ -63,7 +59,6 @@ module.exports = {
         bookingId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             allowNull: true,
         },
         searchId: {
@@ -74,7 +69,6 @@ module.exports = {
         loginAsUserId: { // not empty when admin logs as
             type: 'number',
             columnType: 'int',
-            // index: true,
             allowNull: true,
         },
         fromExternal: {
@@ -206,6 +200,15 @@ module.exports = {
             maxLength: 255,
         },
     },
+
+    indexes: [
+        'sessionId',
+        'userId',
+        'targetUserId',
+        'listingId',
+        'bookingId',
+        'loginAsUserId',
+    ],
 
     getAccessFields,
     beforeCreate,

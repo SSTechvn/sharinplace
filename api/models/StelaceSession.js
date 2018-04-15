@@ -40,7 +40,6 @@ module.exports = {
         userId: {
             type: 'number',
             columnType: 'int',
-            // index: true,
             allowNull: true,
         },
         ip: {
@@ -167,6 +166,10 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'userId',
+    ],
 
     beforeCreate,
 

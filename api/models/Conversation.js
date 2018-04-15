@@ -35,37 +35,31 @@ module.exports = {
             type: 'number',
             columnType: 'int',
             required: true,
-            // index: true,
         },
         bookingId: {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         inputAssessmentId: {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         outputAssessmentId: {
             type: 'number',
             columnType: 'int',
             allowNull: true,
-            // index: true,
         },
         senderId: {
             type: 'number',
             columnType: 'int',
             required: true,
-            // index: true,
         },
         receiverId: { // ownerId in general
             type: 'number',
             columnType: 'int',
             required: true,
-            // index: true,
         },
         startDate: {
             type: 'string',
@@ -118,6 +112,13 @@ module.exports = {
             defaultsTo: {},
         },
     },
+
+    indexes: [
+        'listingId',
+        'bookingId',
+        'senderId',
+        'receiverId',
+    ],
 
     getAccessFields,
     get,
