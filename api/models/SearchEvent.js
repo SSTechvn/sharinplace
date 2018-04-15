@@ -66,19 +66,19 @@ module.exports = {
         },
         os: {
             type: 'string',
-            columnType: 'varchar(255) CHARACTER SET utf8mb4',
+            columnType: 'varchar(255)',
             allowNull: true,
             maxLength: 255,
         },
         browser: {
             type: 'string',
-            columnType: 'varchar(255) CHARACTER SET utf8mb4',
+            columnType: 'varchar(255)',
             allowNull: true,
             maxLength: 255,
         },
         userAgent: {
             type: 'string',
-            columnType: 'varchar(255) CHARACTER SET utf8mb4',
+            columnType: 'varchar(255)',
             allowNull: true,
             maxLength: 255,
         },

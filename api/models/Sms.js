@@ -61,7 +61,7 @@ module.exports = {
         },
         text: {
             type: 'string',
-            columnType: 'varchar(255) CHARACTER SET utf8mb4',
+            columnType: 'varchar(255)',
             allowNull: true,
             maxLength: 255,
         },

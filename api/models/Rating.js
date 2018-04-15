@@ -32,7 +32,7 @@ module.exports = {
         },
         comment: { // general comment, focusing on owner
             type: 'string',
-            columnType: 'longtext CHARACTER SET utf8mb4',
+            columnType: 'longtext',
             allowNull: true,
             maxLength: 2000,
         },

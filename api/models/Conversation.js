@@ -97,7 +97,7 @@ module.exports = {
         },
         privateContent: { // last message privateContent
             type: 'string',
-            columnType: 'longtext CHARACTER SET utf8mb4',
+            columnType: 'longtext',
             allowNull: true,
             maxLength: 255,
         },

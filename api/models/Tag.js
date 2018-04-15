@@ -27,13 +27,13 @@ module.exports = {
         },
         name: {
             type: 'string',
-            columnType: 'varchar(191) CHARACTER SET utf8mb4',
+            columnType: 'varchar(191)',
             required: true,
             maxLength: 191,
         },
         nameURLSafe: {
             type: 'string',
-            columnType: 'varchar(255) CHARACTER SET utf8mb4',
+            columnType: 'varchar(255)',
             allowNull: true,
             maxLength: 255,
         },

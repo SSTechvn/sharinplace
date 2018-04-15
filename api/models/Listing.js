@@ -30,7 +30,7 @@ module.exports = {
         },
         name: {
             type: 'string',
-            columnType: 'varchar(255) CHARACTER SET utf8mb4',
+            columnType: 'varchar(255)',
             required: true,
             maxLength: 255,
         },
@@ -41,7 +41,7 @@ module.exports = {
         },
         nameURLSafe: {
             type: 'string',
-            columnType: 'varchar(255) CHARACTER SET utf8mb4',
+            columnType: 'varchar(255)',
             allowNull: true,
             maxLength: 255,
         },
@@ -67,7 +67,7 @@ module.exports = {
         },
         description: {
             type: 'string',
-            columnType: 'longtext CHARACTER SET utf8mb4',
+            columnType: 'longtext',
             allowNull: true,
             maxLength: 3000,
         },
@@ -78,13 +78,13 @@ module.exports = {
         },
         stateComment: {
             type: 'string',
-            columnType: 'longtext CHARACTER SET utf8mb4',
+            columnType: 'longtext',
             allowNull: true,
             maxLength: 1000,
         },
         bookingPreferences: {
             type: 'string',
-            columnType: 'longtext CHARACTER SET utf8mb4',
+            columnType: 'longtext',
             allowNull: true,
             maxLength: 1000,
         },
@@ -95,7 +95,7 @@ module.exports = {
         },
         reference: {
             type: 'string',
-            columnType: 'varchar(255) CHARACTER SET utf8mb4',
+            columnType: 'varchar(255)',
             allowNull: true,
             maxLength: 255,
         },

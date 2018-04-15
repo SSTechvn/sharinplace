@@ -75,7 +75,7 @@ module.exports = {
         },
         country: {
             type: 'string',
-            columnType: 'varchar(255) CHARACTER SET utf8mb4',
+            columnType: 'varchar(255)',
             allowNull: true,
             maxLength: 255,
         },
@@ -118,7 +118,7 @@ module.exports = {
         },
         establishmentName: { // prevents from exposing name to others
             type: 'string',
-            columnType: 'varchar(255) CHARACTER SET utf8mb4',
+            columnType: 'varchar(255)',
             allowNull: true,
             maxLength: 255,
         },

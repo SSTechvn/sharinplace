@@ -27,18 +27,18 @@ module.exports = {
         },
         status: { // not required because we want to generate an empty assessment
             type: 'string',
-            columnType: 'varchar(255) CHARACTER SET utf8mb4',
+            columnType: 'varchar(255)',
             allowNull: true,
             maxLength: 255,
         },
         comment: {
             type: 'string',
-            columnType: 'longtext CHARACTER SET utf8mb4',
+            columnType: 'longtext',
             allowNull: true,
         },
         commentDiff: {
             type: 'string',
-            columnType: 'longtext CHARACTER SET utf8mb4',
+            columnType: 'longtext',
             allowNull: true,
         },
         listingId: {
@@ -68,7 +68,7 @@ module.exports = {
         },
         signToken: {
             type: 'string',
-            columnType: 'varchar(255) CHARACTER SET utf8mb4',
+            columnType: 'varchar(255)',
             allowNull: true,
             maxLength: 255,
         },

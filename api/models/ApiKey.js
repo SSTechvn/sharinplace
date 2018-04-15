@@ -26,7 +26,7 @@ module.exports = {
         key: {
             type: 'string',
             unique: true,
-            columnType: 'varchar(191) CHARACTER SET utf8mb4',
+            columnType: 'varchar(191)',
             maxLength: 191,
             required: true,
         },

@@ -27,7 +27,7 @@ module.exports = {
         },
         name: {
             type: 'string',
-            columnType: 'varchar(255) CHARACTER SET utf8mb4',
+            columnType: 'varchar(255)',
             required: true,
             maxLength: 255,
         },
@@ -67,7 +67,7 @@ module.exports = {
         },
         url: { // can be longer than 255 characters
             type: 'string',
-            columnType: 'longtext CHARACTER SET utf8mb4',
+            columnType: 'longtext',
             allowNull: true,
         },
         width: {
