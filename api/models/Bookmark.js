@@ -17,13 +17,13 @@ module.exports = {
         },
         createdDate: {
             type: 'string',
-            columnType: 'varchar(255)',
-            maxLength: 255,
+            columnType: 'varchar(24)',
+            maxLength: 24,
         },
         updatedDate: {
             type: 'string',
-            columnType: 'varchar(255)',
-            maxLength: 255,
+            columnType: 'varchar(24)',
+            maxLength: 24,
         },
         listingId: {
             type: 'number',
@@ -54,9 +54,9 @@ module.exports = {
         },
         wishDate: { // start date of the future wished booking
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         lastBookingId: { // last booking id when send push email
             type: 'number',
@@ -65,9 +65,9 @@ module.exports = {
         },
         lastSentDate: {
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         count: {
             type: 'number',

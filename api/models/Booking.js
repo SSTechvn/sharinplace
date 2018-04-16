@@ -19,13 +19,13 @@ module.exports = {
         },
         createdDate: {
             type: 'string',
-            columnType: 'varchar(255)',
-            maxLength: 255,
+            columnType: 'varchar(24)',
+            maxLength: 24,
         },
         updatedDate: {
             type: 'string',
-            columnType: 'varchar(255)',
-            maxLength: 255,
+            columnType: 'varchar(24)',
+            maxLength: 24,
         },
         listingId: {
             type: 'number',
@@ -55,13 +55,15 @@ module.exports = {
         },
         paidDate: { // taker action, set if paymentDate and depositDate are set
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
+            maxLength: 24,
         },
         acceptedDate: { // owner action, when accepting the booking
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
+            maxLength: 24,
         },
         autoAcceptance: {
             type: 'boolean',
@@ -83,15 +85,15 @@ module.exports = {
         },
         startDate: {
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         endDate: {
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         nbTimeUnits: {
             type: 'number',
@@ -171,9 +173,9 @@ module.exports = {
         },
         completedDate: {
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         paymentCompleted: {
             type: 'boolean',
@@ -184,39 +186,39 @@ module.exports = {
 
         paymentDate: { // taker action, set when preauth payment is done
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         depositDate: { // taker action, set when preauth deposit is done
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         releaseDepositDate: { // renew deposit until this date, after the deposit must be cancelled
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         paymentUsedDate: { // set when preauth payment is used
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         paymentTransferDate: { // set when the payment can be withdrawn by the owner
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         withdrawalDate: { // owner action, set when the withdrawal is done
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
 
         cancellationId: {
@@ -226,15 +228,15 @@ module.exports = {
         },
         cancellationPaymentDate: {
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         cancellationDepositDate: {
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         stopRenewDeposit: {
             type: 'boolean',
@@ -245,6 +247,7 @@ module.exports = {
             type: 'string',
             columnType: 'varchar(255)',
             allowNull: true,
+            maxLength: 255,
         },
 
         contractData: {

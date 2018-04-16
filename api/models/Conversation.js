@@ -17,19 +17,19 @@ module.exports = {
         },
         createdDate: {
             type: 'string',
-            columnType: 'varchar(255)',
-            maxLength: 255,
+            columnType: 'varchar(24)',
+            maxLength: 24,
         },
         updatedDate: {
             type: 'string',
-            columnType: 'varchar(255)',
-            maxLength: 255,
+            columnType: 'varchar(24)',
+            maxLength: 24,
         },
         newContentDate: { // only updated if new content if conversation (not for read status changes)
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         listingId: {
             type: 'number',
@@ -63,15 +63,15 @@ module.exports = {
         },
         startDate: {
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         endDate: {
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         bookingStatus: {
             type: 'string',

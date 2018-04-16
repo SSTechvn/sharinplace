@@ -15,13 +15,13 @@ module.exports = {
         },
         createdDate: {
             type: 'string',
-            columnType: 'varchar(255)',
-            maxLength: 255,
+            columnType: 'varchar(24)',
+            maxLength: 24,
         },
         updatedDate: {
             type: 'string',
-            columnType: 'varchar(255)',
-            maxLength: 255,
+            columnType: 'varchar(24)',
+            maxLength: 24,
         },
         listingId: {
             type: 'number',
@@ -30,15 +30,15 @@ module.exports = {
         },
         startDate: {
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         endDate: {
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         quantity: {
             type: 'number',

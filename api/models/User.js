@@ -20,13 +20,13 @@ module.exports = {
         },
         createdDate: {
             type: 'string',
-            columnType: 'varchar(255)',
-            maxLength: 255,
+            columnType: 'varchar(24)',
+            maxLength: 24,
         },
         updatedDate: {
             type: 'string',
-            columnType: 'varchar(255)',
-            maxLength: 255,
+            columnType: 'varchar(24)',
+            maxLength: 24,
         },
         organizationName: {
             type: 'string',
@@ -100,9 +100,9 @@ module.exports = {
         },
         freeFeesDate: {
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         mediaId: {
             type: 'number',
@@ -116,9 +116,9 @@ module.exports = {
         },
         lastConnectionDate: {
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         ratingScore: {
             type: 'number',

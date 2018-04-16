@@ -15,13 +15,13 @@ module.exports = {
         },
         createdDate: {
             type: 'string',
-            columnType: 'varchar(255)',
-            maxLength: 255,
+            columnType: 'varchar(24)',
+            maxLength: 24,
         },
         updatedDate: {
             type: 'string',
-            columnType: 'varchar(255)',
-            maxLength: 255,
+            columnType: 'varchar(24)',
+            maxLength: 24,
         },
         mandrillMessageId: {
             type: 'string',
@@ -61,9 +61,9 @@ module.exports = {
         },
         eventDate: {
             type: 'string',
-            columnType: 'varchar(255)',
+            columnType: 'varchar(24)',
             allowNull: true,
-            maxLength: 255,
+            maxLength: 24,
         },
         clickedUrl: {
             type: 'string',
@@ -130,7 +130,7 @@ module.exports = {
             allowNull: true,
             maxLength: 255,
         },
-        rejectExpirationDate: {
+        rejectExpirationDate: { // provider date
             type: 'string',
             columnType: 'varchar(255)',
             allowNull: true,
