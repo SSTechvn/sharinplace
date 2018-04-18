@@ -154,27 +154,15 @@
         // Facebook SDK
         ezfbProvider.setLocale("fr_FR");
         // Uncomment for development debugging
-        // if (_.includes(["dev", "preprod"], platformProvider.getEnvironment())) {
-        //     var devLoadSDKFunction = [
-        //         "$window", "$document", "$timeout", "ezfbAsyncInit", "ezfbLocale",
-        //         function ($window,   $document,   $timeout,   ezfbAsyncInit,   ezfbLocale) {
-        //             // Load the SDK's source Asynchronously
-        //             (function (d){
-        //                 var insertScript = function () {
-        //                     var js, id = "facebook-jssdk", ref = d.getElementsByTagName("script")[0];
-        //                     if (d.getElementById(id)) { return; }
-        //                     js = d.createElement("script"); js.id = id; js.async = true;
-        //                     // js.src = "//connect.facebook.net/" + ezfbLocale + "/sdk.js";
-        //                     js.src = "//connect.facebook.net/" + ezfbLocale + "/sdk/debug.js";  // debug
-        //                     ref.parentNode.insertBefore(js, ref);
-        //                 };
-        //                 $timeout(insertScript, 0, false);
-        //             })($document[0]);
-
-        //             $window.fbAsyncInit = ezfbAsyncInit;
-        //     }];
-        //     ezfbProvider.setLoadSDKFunction(devLoadSDKFunction);
-        // }
+        if (_.includes(["dev", "preprod"], platformProvider.getEnvironment())) {
+            // Prevent ezfb from loading external script, we take care of it
+            var devLoadSDKFunction = [
+                "$window", "$document", "$timeout", "ezfbAsyncInit", "ezfbLocale",
+                function ($window,   $document,   $timeout,   ezfbAsyncInit,   ezfbLocale) {
+                    $window.fbAsyncInit = function () {};
+            }];
+            ezfbProvider.setLoadSDKFunction(devLoadSDKFunction);
+        }
 
         // Set the right FB app before loading SDK
         var facebookAppId = platformProvider.getFacebookAppId();

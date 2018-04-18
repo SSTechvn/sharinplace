@@ -32,7 +32,8 @@
 
             heroBgHomeStyle.innerHTML = [
                 '.stelace-hero__background, .authentication .app-container::before {',
-                    'background-image: url("' + url + '")',
+                'color: red',
+                    // 'background-image: url("' + url + '")',
                 '}'
             ].join('');
         }

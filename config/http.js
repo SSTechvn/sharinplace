@@ -21,11 +21,15 @@ const { version } = require('../package.json');
 
 const serve = serveStatic(path.join(__dirname, '../assets'));
 
-const cspAllowedUrls = [
+const cspAllowedScriptUrls = [
     'https://cdn.polyfill.io',
     'https://js.stripe.com',
     'https://maps.googleapis.com',
     'https://connect.facebook.net',
+];
+const cspAllowedFontUrls = [
+    'https://fonts.googleapis.com',
+    'https://fonts.gstatic.com',
 ];
 
 let dashboardProxy;
@@ -185,7 +189,10 @@ module.exports.http = {
             nosniff: true,
             csp: {
                 policy: {
-                    'script-src': `'self' 'unsafe-eval' ${cspAllowedUrls.join(' ')}`,
+                    // 'default-src': `'self' 'unsafe-inline' ${cspAllowedScriptUrls.join(' ')}`,
+                    // 'font-src': `'self' ${cspAllowedFontUrls.join(' ')}`,
+                    // 'script-src': `'self' 'unsafe-eval' ${cspAllowedScriptUrls.join(' ')}`,
+                    // 'img-src': `'self' 'unsafe-inline' https: data: blob:`,
                 },
                 scriptNonce: true,
             },
