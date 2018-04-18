@@ -1,4 +1,4 @@
-/* global CustomAttributesService, ListingType, StelaceConfigService, ToolsService */
+/* global CustomAttributesService, Listing, ListingType, StelaceConfigService, ToolsService */
 
 module.exports = {
 
@@ -373,7 +373,29 @@ async function updateListingType(listingTypeId, {
         throw createError(400, 'Bad params');
     }
 
-    const updatedListingType = await ListingType.updateOne(listingTypeId, computedListingType);
+    let updatedListingType;
+
+    await ListingType.getDatastore().transaction(async (db, proceed) => {
+        const oldProperties = listingType.properties;
+        const { AVAILABILITY } = computedListingType.properties;
+
+        if (oldProperties.AVAILABILITY !== AVAILABILITY && AVAILABILITY === 'UNIQUE') {
+            const sqlQuery = `
+                UPDATE listing
+                SET quantity = 1
+                WHERE JSON_CONTAINS(listingTypesIds, '$1')
+            `;
+            await Listing.getDatastore().sendNativeQuery(sqlQuery, [listingTypeId]);
+        }
+
+        [updatedListingType] = await ListingType.update({ id: listingTypeId }, computedListingType).usingConnection(db);
+        if (!updatedListingType) {
+            throw createError('Listing type not found');
+        }
+
+        proceed();
+    });
+
     resetCache();
 
     return updatedListingType;
