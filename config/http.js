@@ -15,10 +15,18 @@ const path  = require('path');
 const fs    = require('fs');
 const proxy = require('http-proxy-middleware');
 const serveStatic = require('serve-static');
+const lusca = require('lusca');
 
 const { version } = require('../package.json');
 
 const serve = serveStatic(path.join(__dirname, '../assets'));
+
+const cspAllowedUrls = [
+    'https://cdn.polyfill.io',
+    'https://js.stripe.com',
+    'https://maps.googleapis.com',
+    'https://connect.facebook.net',
+];
 
 let dashboardProxy;
 
@@ -52,6 +60,7 @@ module.exports.http = {
             'compress',
             'basicAuth',
             'secureResponseHeader',
+            'removePoweredBy',
             'proxyDashboard',
             'router',
             'staticInstall',
@@ -170,11 +179,19 @@ module.exports.http = {
             }
         },
 
-        secureResponseHeader: function (req, res, next) {
-            res.set("x-frame-options", "SAMEORIGIN");
-            res.set("x-xss-protection", "1; mode=block");
-            res.set("x-content-type-options", "nosniff");
+        secureResponseHeader: lusca({
+            xframe: 'SAMEORIGIN',
+            xssProtection: true,
+            nosniff: true,
+            csp: {
+                policy: {
+                    'script-src': `'self' 'unsafe-eval' ${cspAllowedUrls.join(' ')}`,
+                },
+                scriptNonce: true,
+            },
+        }),
 
+        removePoweredBy: function (req, res, next) {
             res.removeHeader("x-powered-by");
 
             next();

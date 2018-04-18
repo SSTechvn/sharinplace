@@ -84,6 +84,7 @@
     "jsonwebtoken": "5.7.0",
     "knex": "0.14.2",
     "lodash": "3.10.1",
+    "lusca": "1.6.0",
     "make-dir": "1.0.0",
     "mandrill-api": "1.0.45",
     "mangopay2-nodejs-sdk": "1.7.0",

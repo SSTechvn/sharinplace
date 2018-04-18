@@ -20,6 +20,11 @@ module.exports.routes = {
     '/install': 'AppController.install',
     '/unsubscribe': "UserController.unsubscribeLink",
 
+    // Generated assets based on Stelace config
+    '/generated/scripts/before-app.js': 'AppController.generatedScripts',
+    '/generated/scripts/external-services.js': 'AppController.generatedScripts',
+    '/generated/scripts/after-app.js': 'AppController.generatedScripts',
+
 
 
     ///////////////////

@@ -1152,7 +1152,7 @@ function getContract(req, res) {
                         .catch(() => { return; });
                 });
         })
-        .catch(err => sendErrorView(err));
+        .catch(err => sendErrorView(err, res.locals.nonce));
 
 
 
@@ -1168,7 +1168,7 @@ function getContract(req, res) {
         return StelaceEventService.createEvent(config);
     }
 
-    function sendErrorView(err) {
+    function sendErrorView(err, cspNonce) {
         var body = "";
 
         if (err.message === "token expired") {
@@ -1176,14 +1176,14 @@ function getContract(req, res) {
             var conversationUrl = "/inbox" + (conversationId ? "/" + conversationId : "");
 
             body += "L'URL du contrat a expiré. Vous allez être redirigé dans quelques instants...";
-            body += getRedirectURLScript(conversationUrl);
+            body += getRedirectURLScript(conversationUrl, cspNonce);
 
-            res.send(200, getHtml(body));
+            res.status(200).send(getHtml(body));
         } else if (err.status === 403) {
             body += "L'URL du contrat est incorrecte. Vous allez être redirigé dans quelques instants...";
-            body += getRedirectURLScript("/");
+            body += getRedirectURLScript("/", cspNonce);
 
-            res.send(403, getHtml(body));
+            res.status(403).send(getHtml(body));
         } else {
             req.logger.error({
                 err: err,
@@ -1192,9 +1192,9 @@ function getContract(req, res) {
 
             body += "Une erreur est survenue. Veuillez réessayer plus tard.<br>";
             body += "Vous allez être redirigé dans quelques instants...";
-            body += getRedirectURLScript("/");
+            body += getRedirectURLScript("/", cspNonce);
 
-            res.send(505, getHtml(body));
+            res.status(505).send(getHtml(body));
         }
     }
 
@@ -1216,11 +1216,11 @@ function getContract(req, res) {
         `;
     }
 
-    function getRedirectURLScript(url, timeout) {
-        timeout = timeout || 5000;
+    function getRedirectURLScript(url, cspNonce) {
+        const timeout = 5000;
 
         return `
-            <script>
+            <script nonce="${cspNonce}">
                 setTimeout(function () { window.location.replace("${url}") }, ${timeout});
             </script>
         `;

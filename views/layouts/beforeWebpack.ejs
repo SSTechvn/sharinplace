@@ -98,84 +98,14 @@
       </div>
     </div>
 
-    <!-- Polyfills -->
-    <script>
-      // Element remove
-      if (! ("remove" in Element.prototype)) {
-        Element.prototype.remove = function () {
-          if (this.parentNode) {
-            this.parentNode.removeChild(this);
-          }
-        };
-      }
-    </script>
-
-    <% if (dataFromServer) { %>
-    <script>
-      window.dataFromServer = <%- dataFromServer %>;
-    </script>
-    <% } %>
-
     <%- body %>
-
-    <% if (googleTracking && googleAnalyticsId) { %>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', '<%= googleAnalyticsId %>', 'auto');
-      // ga('require', 'linkid', 'linkid.js');
-    </script>
-    <% } else { %>
-    <script>
-      window.gaFake = true;
-      window.ga = function () {};
-    </script>
-    <% } %>
-
-    <% if (facebookTracking === "dev") { %>
-    <script>
-      // Facebook Pixel Debugging
-      window.fbq = function (t,name,data) { console.log("Facebook Pixel Event:", name, data); };
-    </script>
-    <% } else if (facebookTracking && facebookPixelId) { %>
-    <script>
-      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-      document,'script','//connect.facebook.net/en_US/fbevents.js');
-
-      fbq('init', '<%= facebookPixelId %>');
-      // fbq('track', "PageView");
-    </script>
-    <% } else { %>
-    <script>
-      window.fbq = function () {};
-    </script>
-    <% } %>
-
-    <% if (googleMapApiKey) { %>
-    <script>
-      window.googleMapApiKey = "<%= googleMapApiKey %>";
-    </script>
-    <% } %>
 
     <!-- app-pre:js -->
     <script src="/assets/build/js/app-pre.js"></script>
     <!-- endinject -->
 
-    <% if (featureDetection) { %>
-    <script>
-      var hasFeatures = (Modernizr.flexbox || Modernizr.flexboxtweener);
-
-      if (! hasFeatures) {
-        window.location.replace("/old-browsers");
-      }
-    </script>
-    <% } %>
+    <script src="/generated/scripts/before-app.js"></script>
+    <script src="/generated/scripts/external-services.js"></script>
 
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
 
@@ -194,15 +124,7 @@
     <!-- <script defer src="/assets/build/js/app-lang.js"></script> -->
     <!-- endinject -->
 
-    <script>
-      // CSS Custom Properties ponyfill
-      cssVars && cssVars();
-
-      var loadingContentEl = document.getElementById("loading-content");
-      if (loadingContentEl && loadingContentEl.remove) {
-        loadingContentEl.remove();
-      }
-    </script>
+    <script src="/generated/scripts/after-app.js"></script>
 
     <!-- Webpack scripts -->
   </body>

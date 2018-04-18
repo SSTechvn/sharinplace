@@ -24,6 +24,7 @@ module.exports.policies = {
         index: true,
         oldBrowsers: true,
         install: true,
+        generatedScripts: true,
     },
 
     AuthController: {

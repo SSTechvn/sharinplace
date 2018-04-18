@@ -12,6 +12,7 @@ module.exports = {
     index,
     oldBrowsers,
     install,
+    generatedScripts,
 
 };
 
@@ -86,7 +87,6 @@ async function index(req, res) {
     }
 
     const config = await StelaceConfigService.getConfig();
-    const features = await StelaceConfigService.getListFeatures();
 
     const eventActive = await StelaceConfigService.isFeatureActive('EVENTS');
     const stelaceEventData = eventActive ? await getStelaceEventData(req, res) : {};
@@ -96,50 +96,11 @@ async function index(req, res) {
 
     const seoConfig = await getSeoConfig(req.url);
 
-    const lang = ContentEntriesService.getBestLang(config.lang); // in case the language doesn't exist
-    const currency = config.currency || StelaceConfigService.getDefaultCurrency();
-
-    // pre-load translations for client-side
-    const translations = await ContentEntriesService.getTranslations({
+    const {
+        stripeActive,
         lang,
-        displayContext: false,
-        onlyEditableKeys: false,
-        namespace: 'default',
-    });
-
-    let paymentProvider = config.payment_provider;
-
-    let stripePublishKey = config.stripe__publish_key;
-    let googleMapApiKey = config.google_maps__api_key;
-    let stripeActive;
-
-    const freeTrial = sails.config.stelace.stelaceId && !config.is_service_live;
-
-    if (freeTrial) {
-        if (!paymentProvider) {
-            paymentProvider = StelaceConfigService.getDefaultPaymentProvider();
-        }
-        stripePublishKey = sails.config.freeTrial.stripe.publishKey;
-        stripeActive = true;
-    } else {
-        stripeActive = (paymentProvider === 'stripe' || config.stripe_complete);
-    }
-    if (sails.config.stelace.stelaceId) {
-        if (!googleMapApiKey) {
-            googleMapApiKey = sails.config.freeTrial.googleMapApiKey;
-        }
-    }
-
-    const dataFromServer = {
-        config,
-        features,
-        lang,
-        currency,
         translations,
-        paymentProvider,
-        stripePublishKey,
-        freeTrial,
-    };
+    } = await getConfigData();
 
     let highlightTranslations;
     if (sails.config.highlightTranslations) {
@@ -156,12 +117,7 @@ async function index(req, res) {
         metaRobotsTags: null,
         canonicalUrl: null,
         facebookAppId: config.facebook_app__id,
-        facebookTracking: config.facebook_pixel__active,
-        facebookPixelId: config.facebook_pixel__id,
-        googleTracking: config.google_analytics__active,
-        googleAnalyticsId: config.google_analytics__tracking_id,
         twitterUsername: config.twitter_username,
-        googleMapApiKey,
         logoUrl: config.logo__url,
         headerImgUrl: config.hero_background__home__url || "https://stelace.com/img/brand/stelace-social-header.png",
         serviceName: config.SERVICE_NAME,
@@ -173,8 +129,6 @@ async function index(req, res) {
         eventToken: stelaceEvent ? stelaceEvent.token : '',
         uxVersion: StelaceEventService.getCurrentVersion(),
         devHighlightTranslations: highlightTranslations ? 'highlight-translations' : '',
-        featureDetection: !UAService.isBot(userAgent),
-        dataFromServer: JSON.stringify(dataFromServer || {}),
         stripeActive,
         styles: {},
     };
@@ -593,4 +547,187 @@ async function oldBrowsers(req, res) {
 async function install(req, res) {
     const htmlPath = path.join(__dirname, '../../assets/install/index.html');
     return res.sendFile(htmlPath);
+}
+
+async function generatedScripts(req, res) {
+    const userAgent = req.headers["user-agent"];
+    const urlPrefix = '/generated/scripts';
+
+    const config = await StelaceConfigService.getConfig();
+
+    const {
+        dataFromServer,
+    } = await getConfigData();
+
+    res.set('content-type', 'application/javascript');
+
+    let body = '';
+
+    if (req.url === `${urlPrefix}/before-app.js`) {
+        // Polyfill
+        body += `
+            if (! ("remove" in Element.prototype)) {
+                Element.prototype.remove = function () {
+                    if (this.parentNode) {
+                        this.parentNode.removeChild(this);
+                    }
+                };
+            }
+        `;
+
+        // Redirects to old-browsers view if has not enough features
+        const featureDetection = !UAService.isBot(userAgent);
+        if (featureDetection) {
+            body += `
+                var hasFeatures = (Modernizr.flexbox || Modernizr.flexboxtweener);
+
+                if (! hasFeatures) {
+                    window.location.replace("/old-browsers");
+                }
+            `;
+        }
+
+        // Pass some data to client
+        if (dataFromServer) {
+            body += `
+                window.dataFromServer = ${JSON.stringify(dataFromServer)};
+            `;
+        }
+    } else if (req.url === `${urlPrefix}/external-services.js`) {
+        // Google Analytics
+        const googleAnalyticsId = config.google_analytics__tracking_id;
+
+        if (config.google_analytics__active && googleAnalyticsId) {
+            body += `
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', '${googleAnalyticsId}', 'auto');
+            `;
+        } else {
+            body += `
+                window.gaFake = true;
+                window.ga = function () {};
+            `;
+        }
+
+        // Facebook Pixel
+        if (config.facebook_pixel__active) {
+            const facebookPixelId = config.facebook_pixel__id;
+
+            if (sails.config.environment === 'production' && facebookPixelId) {
+                body += `
+                    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+                    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+                    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+                    document,'script','//connect.facebook.net/en_US/fbevents.js');
+
+                    fbq('init', '${facebookPixelId}');
+                `;
+            } else {
+                body += `
+                    window.fbq = function (t,name,data) { console.log("Facebook Pixel Event:", name, data); };
+                `;
+            }
+        } else {
+            body += `
+                window.fbq = function () {};
+            `;
+        }
+
+        // Google Maps
+        let googleMapApiKey = config.google_maps__api_key;
+        if (sails.config.stelace.stelaceId && !googleMapApiKey) {
+            googleMapApiKey = sails.config.freeTrial.googleMapApiKey;
+        }
+
+        if (googleMapApiKey) {
+            body += `
+                window.googleMapApiKey = "${googleMapApiKey}";
+            `;
+        }
+    } else if (req.url === `${urlPrefix}/after-app.js`) {
+        body += `
+            window.cssVars && window.cssVars();
+
+            var loadingContentEl = document.getElementById("loading-content");
+            if (loadingContentEl && loadingContentEl.remove) {
+                loadingContentEl.remove();
+            }
+        `
+    }
+
+    // Remove spaces generated by template strings
+    body = body.split('\n').map(line => line.trim()).join(' ');
+
+    res.send(body);
+}
+
+/**
+ * @return {Object} res
+ * @return {Object} res.dataFromServer
+ * @return {Object} res.translations
+ * @return {Boolean} res.stripeActive
+ * @return {String} res.lang
+ * @return {String} res.currency
+ */
+async function getConfigData() {
+    const config = await StelaceConfigService.getConfig();
+    const features = await StelaceConfigService.getListFeatures();
+
+    const lang = ContentEntriesService.getBestLang(config.lang); // in case the language doesn't exist
+    const currency = config.currency || StelaceConfigService.getDefaultCurrency();
+
+    // pre-load translations for client-side
+    const translations = await ContentEntriesService.getTranslations({
+        lang,
+        displayContext: false,
+        onlyEditableKeys: false,
+        namespace: 'default',
+    });
+
+    let paymentProvider = config.payment_provider;
+
+    let stripePublishKey = config.stripe__publish_key;
+    let googleMapApiKey = config.google_maps__api_key;
+    let stripeActive;
+
+    const freeTrial = sails.config.stelace.stelaceId && !config.is_service_live;
+
+    if (freeTrial) {
+        if (!paymentProvider) {
+            paymentProvider = StelaceConfigService.getDefaultPaymentProvider();
+        }
+        stripePublishKey = sails.config.freeTrial.stripe.publishKey;
+        stripeActive = true;
+    } else {
+        stripeActive = (paymentProvider === 'stripe' || config.stripe_complete);
+    }
+    if (sails.config.stelace.stelaceId) {
+        if (!googleMapApiKey) {
+            googleMapApiKey = sails.config.freeTrial.googleMapApiKey;
+        }
+    }
+
+    const dataFromServer = {
+        config,
+        features,
+        lang,
+        currency,
+        translations,
+        paymentProvider,
+        stripePublishKey,
+        freeTrial,
+    };
+
+    return {
+        dataFromServer,
+        translations,
+        stripeActive,
+        lang,
+        currency,
+    };
 }
