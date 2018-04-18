@@ -190,8 +190,8 @@ async function findOne(req, res) {
     listing.instructionsMedias = Media.exposeAll(listingInstructionsMedias, access);
 
     let listingType;
-    if (listing.listingTypesIds.length) {
-        listingType = await ListingTypeService.getListingType(listing.listingTypesIds[0]);
+    if (listing.listingTypeId) {
+        listingType = await ListingTypeService.getListingType(listing.listingTypeId);
     }
 
     const availabilityGraphs = {

@@ -380,12 +380,7 @@ async function updateListingType(listingTypeId, {
         const { AVAILABILITY } = computedListingType.properties;
 
         if (oldProperties.AVAILABILITY !== AVAILABILITY && AVAILABILITY === 'UNIQUE') {
-            const sqlQuery = `
-                UPDATE listing
-                SET quantity = 1
-                WHERE JSON_CONTAINS(listingTypesIds, '$1')
-            `;
-            await Listing.getDatastore().sendNativeQuery(sqlQuery, [listingTypeId]);
+            await Listing.update({ listingTypeId }, { quantity: 1 }).usingConnection(db);
         }
 
         [updatedListingType] = await ListingType.update({ id: listingTypeId }, computedListingType).usingConnection(db);

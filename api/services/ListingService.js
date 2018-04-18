@@ -41,7 +41,7 @@ const createError = require('http-errors');
  * @param {String[]} [attrs.validationFields]
  * @param {Number[]} [attrs.locations]
  * @param {String} [attrs.recurringDatesPattern]
- * @param {Number[]} [attrs.listingTypesIds]
+ * @param {Number} [attrs.listingTypeId]
  * @param {Object} [attrs.customPricingConfig]
  * @param {Boolean} [attrs.acceptFree]
  * @param {Object} [options]
@@ -66,7 +66,7 @@ async function createListing(attrs, { req, res } = {}) {
         'validationFields',
         'locations',
         'recurringDatesPattern',
-        'listingTypesIds',
+        'listingTypeId',
         'timeUnitPrice',
         'sellingPrice',
         'customPricingConfig',
@@ -82,7 +82,7 @@ async function createListing(attrs, { req, res } = {}) {
         || (typeof createAttrs.sellingPrice !== 'undefined' && (typeof createAttrs.sellingPrice !== 'number' || createAttrs.sellingPrice < 0))
         || (typeof createAttrs.timeUnitPrice !== 'undefined' && (typeof createAttrs.timeUnitPrice !== 'number' || createAttrs.timeUnitPrice < 0))
         || (typeof createAttrs.deposit !== 'undefined' && (typeof createAttrs.deposit !== 'number' || createAttrs.deposit < 0))
-        || (!createAttrs.listingTypesIds || !MicroService.checkArray(createAttrs.listingTypesIds, 'id') || !createAttrs.listingTypesIds.length)
+        || (!createAttrs.listingTypeId || isNaN(createAttrs.listingTypeId))
         || (createAttrs.customPricingConfig && createAttrs.customPricingConfig.duration && ! PricingService.isValidCustomDurationConfig(createAttrs.customPricingConfig.duration))
         || (createAttrs.recurringDatesPattern && !TimeService.isValidCronPattern(createAttrs.recurringDatesPattern))
         || (typeof createAttrs.quantity === 'number' && createAttrs.quantity < 0)
@@ -94,14 +94,15 @@ async function createListing(attrs, { req, res } = {}) {
         createAttrs.quantity = 1;
     }
 
-    const listingTypes = await ListingTypeService.filterListingTypes(createAttrs.listingTypesIds);
-    if (createAttrs.listingTypesIds.length !== listingTypes.length) {
+    createAttrs.listingTypeId = parseInt(createAttrs.listingTypeId, 10);
+
+    const listingType = await ListingTypeService.getListingType(createAttrs.listingTypeId);
+    if (!listingType) {
         throw createError(400);
     }
 
     const config = await StelaceConfigService.getConfig();
 
-    const listingType = listingTypes[0];
     const { TIME, AVAILABILITY } = listingType.properties;
 
     if (TIME === 'TIME_FLEXIBLE' && typeof createAttrs.timeUnitPrice !== 'number') {
@@ -122,7 +123,6 @@ async function createListing(attrs, { req, res } = {}) {
     createAttrs = _.merge({}, createAttrs, modelDelta);
 
     if (createAttrs.recurringDatesPattern) {
-        const listingType = listingTypes[0];
         createAttrs.recurringDatesPattern = TimeService.forceCronPattern(
             createAttrs.recurringDatesPattern,
             listingType.config.bookingTime.timeUnit || 'd'
@@ -130,13 +130,12 @@ async function createListing(attrs, { req, res } = {}) {
     }
 
     let data = createAttrs.data || {};
-    _.forEach(listingTypes, listingType => {
-        const { newData, valid } = CustomAttributesService.checkData(data, listingType.customAttributes);
-        if (!valid) {
-            throw createError(400, 'Incorrect custom attributes');
-        }
-        data = newData;
-    });
+    const { newData, valid } = CustomAttributesService.checkData(data, listingType.customAttributes);
+    if (!valid) {
+        throw createError(400, 'Incorrect custom attributes');
+    }
+    data = newData;
+
     createAttrs.data = data;
 
     if (createAttrs.sellingPrice) {
@@ -222,7 +221,7 @@ async function createListing(attrs, { req, res } = {}) {
  * @param {String[]} [attrs.validationFields]
  * @param {Number[]} [attrs.locations]
  * @param {String} [attrs.recurringDatesPattern]
- * @param {Number[]} [attrs.listingTypesIds]
+ * @param {Number} [attrs.listingTypeId]
  * @param {Object} [attrs.customPricingConfig]
  * @param {Boolean} [attrs.acceptFree]
  * @param {Object} [attrs.data]
@@ -244,7 +243,7 @@ async function updateListing(listingId, attrs = {}, { userId } = {}) {
         'listingCategoryId',
         'locations',
         'recurringDatesPattern',
-        'listingTypesIds',
+        'listingTypeId',
         'timeUnitPrice',
         'sellingPrice',
         'customPricingConfig',
@@ -256,7 +255,7 @@ async function updateListing(listingId, attrs = {}, { userId } = {}) {
 
     if ((updateAttrs.tags && ! MicroService.checkArray(updateAttrs.tags, 'id'))
         || (updateAttrs.locations && ! MicroService.checkArray(updateAttrs.locations, 'id'))
-        || (updateAttrs.listingTypesIds && (! MicroService.checkArray(updateAttrs.listingTypesIds, 'id') || !updateAttrs.listingTypesIds.length))
+        || (updateAttrs.listingTypeId && isNaN(updateAttrs.listingTypeId))
         || (updateAttrs.data && typeof updateAttrs.data !== 'object')
         || (updateAttrs.sellingPrice && (typeof updateAttrs.sellingPrice !== 'number' || updateAttrs.sellingPrice < 0))
         || (updateAttrs.timeUnitPrice && (typeof updateAttrs.timeUnitPrice !== 'number' || updateAttrs.timeUnitPrice < 0))
@@ -288,34 +287,33 @@ async function updateListing(listingId, attrs = {}, { userId } = {}) {
         throw createError(403);
     }
 
-    if (updateAttrs.listingTypesIds) {
-        const validListingTypes = await ListingTypeService.isValidListingTypesIds(updateAttrs.listingTypesIds)
+    if (updateAttrs.listingTypeId) {
+        updateAttrs.listingTypeId = parseInt(updateAttrs.listingTypeId, 10);
+
+        const validListingTypes = await ListingTypeService.isValidListingTypesIds([updateAttrs.listingTypeId])
         if (!validListingTypes) {
             throw createError(400);
         }
     }
 
     // check custom attributes even if there is no data (in case listing types custom attributes changed)
-    const listingTypes = await ListingTypeService.filterListingTypes(updateAttrs.listingTypesIds || listing.listingTypesIds);
+    const listingType = await ListingTypeService.getListingType(updateAttrs.listingTypeId || listing.listingTypeId);
     let data = _.merge(listing.data || {}, updateAttrs.data || {});
-    _.forEach(listingTypes, listingType => {
-        const { newData, valid } = CustomAttributesService.checkData(data, listingType.customAttributes);
-        if (!valid) {
-            throw createError(400, 'Incorrect custom attributes');
-        }
-        data = newData;
-    });
+    const { newData, valid } = CustomAttributesService.checkData(data, listingType.customAttributes);
+    if (!valid) {
+        throw createError(400, 'Incorrect custom attributes');
+    }
+    data = newData;
+
     updateAttrs.data = data;
 
     if (updateAttrs.recurringDatesPattern) {
-        const listingType = listingTypes[0];
         updateAttrs.recurringDatesPattern = TimeService.forceCronPattern(
             updateAttrs.recurringDatesPattern,
             listingType.config.bookingTime.timeUnit || 'd'
         );
     }
 
-    const listingType = listingTypes[0];
     const { AVAILABILITY } = listingType.properties;
 
     if (AVAILABILITY === 'NONE' || AVAILABILITY === 'UNIQUE') {
@@ -564,11 +562,11 @@ async function createListingAvailability(attrs, { userId } = {}) {
     if (userId && listing.ownerId !== userId) {
         throw createError(403);
     }
-    if (listing.listingTypesIds.length !== 1) {
+    if (!listing.listingTypeId) {
         throw createError(403);
     }
 
-    const listingType = await ListingTypeService.getListingType(listing.listingTypesIds[0]);
+    const listingType = await ListingTypeService.getListingType(listing.listingTypeId);
     if (!listingType) {
         throw createError(404);
     }
@@ -647,7 +645,7 @@ async function updateListingAvailability({ listingId, listingAvailabilityId, qua
         throw createError(400);
     }
 
-    const listingType = await ListingTypeService.getListingType(listing.listingTypesIds[0]);
+    const listingType = await ListingTypeService.getListingType(listing.listingTypeId);
     if (!listingType) {
         throw createError(404);
     }

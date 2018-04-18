@@ -120,7 +120,7 @@ function getComparedFields(targetType) {
             "nbRatings",
             "autoBookingAcceptance",
             "locations",
-            "listingTypesIds",
+            "listingTypeId",
             "sellingPrice",
             "timeUnitPrice",
             "pricingId",

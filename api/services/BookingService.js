@@ -144,10 +144,10 @@ function checkBasic({
     if (listing.ownerId === user.id) {
         throw createError(403, 'Owner cannot book its own listing');
     }
-    if (!listing.listingTypesIds.length) {
-        throw new Error('Listing has no listing types');
+    if (!listing.listingTypeId) {
+        throw new Error('Listing has no listing type');
     }
-    if (!listingTypeId || !_.includes(listing.listingTypesIds, listingTypeId)) {
+    if (!listingTypeId || listingTypeId !== listing.listingTypeId) {
         throw new Error('Incorrect listing type');
     }
     if (!listing.quantity) {

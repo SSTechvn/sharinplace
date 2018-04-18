@@ -185,7 +185,11 @@ module.exports = {
             allowNull: true,
             maxLength: 255,
         },
-        listingTypesIds: {
+        listingTypeId: {
+            type: 'number',
+            columnType: 'int',
+        },
+        listingTypesIds: { // TODO: remove it after migration
             type: 'json',
             columnType: 'json',
             defaultsTo: [],
@@ -286,7 +290,7 @@ function getAccessFields(access) {
             "locked",
             "publishedDate",
             "pausedUntil",
-            "listingTypesIds",
+            "listingTypeId",
             "listingTypes", // due to expose transform
             "quantity",
             "timeUnitPrice",
@@ -326,7 +330,7 @@ function getAccessFields(access) {
             "locked",
             "publishedDate",
             "pausedUntil",
-            "listingTypesIds",
+            "listingTypeId",
             "listingTypes", // due to expose transform
             "quantity",
             "timeUnitPrice",
@@ -361,7 +365,7 @@ function getAccessFields(access) {
             "recurringDatesPattern",
             "broken",
             "locked",
-            "listingTypesIds",
+            "listingTypeId",
             "listingTypes", // due to expose transform
             "quantity",
             "timeUnitPrice",
@@ -741,16 +745,17 @@ function getSnapshots(listingsIds) {
 }
 
 function getListingTypesProperties(listing, listingTypes) {
-    return _.reduce(listing.listingTypesIds, (memo, listingTypeId) => {
-        const listingType = _.find(listingTypes, l => l.id === listingTypeId);
-        if (listingType) {
-            _.forEach(listingType.properties, (property, key) => {
-                memo[key] = memo[key] || {};
-                memo[key][property] = true;
-            });
-        }
-        return memo;
-    }, {});
+    const obj = {};
+
+    const listingType = _.find(listingTypes, l => l.id === listing.listingTypeId);
+    if (listingType) {
+        _.forEach(listingType.properties, (property, key) => {
+            obj[key] = obj[key] || {};
+            obj[key][property] = true;
+        });
+    }
+
+    return obj;
 }
 
 function getMaxQuantity(listing, listingType) {

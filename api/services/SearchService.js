@@ -176,6 +176,9 @@ async function fetchPublishedListings(searchQuery, { listingCategoriesIds }) {
     if (listingCategoriesIds) {
         findAttrs.listingCategoryId = MicroService.escapeListForQueries(listingCategoriesIds);
     }
+    if (listingTypesIds) {
+        findAttrs.listingTypeId = MicroService.escapeListForQueries(listingTypesIds);
+    }
     if (withoutIds) {
         findAttrs.id = { '!=': withoutIds };
     }
@@ -198,21 +201,6 @@ async function fetchPublishedListings(searchQuery, { listingCategoriesIds }) {
     }
 
     let listings = await modelQuery;
-
-    if (!listingTypesIds || !listingTypesIds.length) {
-        return listings;
-    }
-
-    const indexedListingTypesIds = _.indexBy(listingTypesIds);
-
-    listings = _.filter(listings, listing => {
-        return _.reduce(listing.listingTypesIds, (memo, id) => {
-            if (indexedListingTypesIds[id]) {
-                return true;
-            }
-            return memo;
-        }, false);
-    });
 
     return listings;
 }

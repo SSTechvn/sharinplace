@@ -818,21 +818,19 @@
         }
 
         function getListingTypesProperties(listing, listingTypes) {
-            // TODO: only take the first one for now, manage several of them later
-            var ids = [_.first(listing.listingTypesIds)];
+            var obj = {};
 
-            return _.reduce(ids, function (memo, listingTypeId) {
-                var listingType = _.find(listingTypes, function (l) {
-                    return l.id === listingTypeId;
+            var listingType = _.find(listingTypes, function (l) {
+                return l.id === listing.listingTypeId;
+            });
+            if (listingType) {
+                _.forEach(listingType.properties, function (property, key) {
+                    obj[key] = obj[key] || {};
+                    obj[key][property] = true;
                 });
-                if (listingType) {
-                    _.forEach(listingType.properties, function (property, key) {
-                        memo[key] = memo[key] || {};
-                        memo[key][property] = true;
-                    });
-                }
-                return memo;
-            }, {});
+            }
+
+            return obj;
         }
 
         function getMaxQuantity(listing, listingType) {

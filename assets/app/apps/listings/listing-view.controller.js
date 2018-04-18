@@ -265,10 +265,9 @@
                 questions          = results.questions;
                 searchConfig       = results.searchConfig;
                 vm.listingTypes    = results.listingTypes;
-                vm.uniqueListingType = listing.listingTypesIds.length === 1;
 
                 vm.selectedListingType = _.find(vm.listingTypes, function (listingType) {
-                    return listingType.id === listing.listingTypesIds[0];
+                    return listingType.id === listing.listingTypeId;
                 });
 
                 if (!vm.selectedListingType) {
