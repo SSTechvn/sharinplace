@@ -12,7 +12,6 @@
         service.getDeviceType    = getDeviceType;
         service.roundDecimal     = roundDecimal;
         service.clampNumber      = clampNumber;
-        service.replaceObjectFit = replaceObjectFit;
         service.fillByCharacter  = fillByCharacter;
         service.shrinkString     = shrinkString;
         service.trim             = trim;
@@ -109,23 +108,6 @@
                 return number;
             } else {
                 return Math.max(min, Math.min(number, max));
-            }
-        }
-
-        function replaceObjectFit() {
-            // Try to use <img> instead of background-image when <img> is content related (SEO)
-            // Care when using this in complex flexbox items, may break object-fit (Chrome/Webkit)
-            // use a fixed aspect ratio container and generate image server-side is preferred whenever possible
-            var fitImagesContainers = document.getElementsByClassName("fit-replace");
-
-            if (! Modernizr.objectfit) {
-                for (var i = 0; i < fitImagesContainers.length; i++) {
-                    angular.element(fitImagesContainers[i]).addClass("fit-replace-true");
-                }
-            } else {
-                for (var j = 0; j < fitImagesContainers.length; j++) {
-                    angular.element(fitImagesContainers[j]).addClass("fit-replace-false");
-                }
             }
         }
 

@@ -29,7 +29,6 @@
     "globals": {
         // vendor
         "_": false,
-        "Modernizr": false,
         "Foundation": false,
         "angular": false
     },

@@ -578,10 +578,22 @@ async function generatedScripts(req, res) {
         // Redirects to old-browsers view if has not enough features
         const featureDetection = !UAService.isBot(userAgent);
         if (featureDetection) {
+            // Flexbox feature detection
+            // http://johanronsse.be/2016/01/03/simple-flexbox-check/
             body += `
-                var hasFeatures = (Modernizr.flexbox || Modernizr.flexboxtweener);
+                var doc = document.body || document.documentElement;
+                var style = doc.style;
 
-                if (! hasFeatures) {
+                var hasFeatures = false;
+
+                if (style.webkitFlexWrap == ''
+                 || style.msFlexWrap == ''
+                 || style.flexWrap == ''
+                ) {
+                    hasFeatures = true;
+                }
+
+                if (!hasFeatures) {
                     window.location.replace("/old-browsers");
                 }
             `;

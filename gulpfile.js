@@ -17,7 +17,7 @@ var reload      = browserSync.reload;
 var jsConfig = {
 
     "app-pre": [
-        "assets/vendors/modernizr-custom.js"
+
     ],
 
     "app-lib": [
@@ -433,7 +433,7 @@ gulp.task('build:sprites-svg:prod', function () {
 /** Linker **/
 gulp.task('linker:dev', function () {
     return gulp.src("views/layouts/**/*.ejs")
-        .pipe($$.inject(gulp.src("assets/build/js/app-pre.js", { read: false }), { name: "app-pre" }))
+        // .pipe($$.inject(gulp.src("assets/build/js/app-pre.js", { read: false }), { name: "app-pre" }))
         .pipe($$.inject(gulp.src([
             "assets/build/js/app-lib.js",
             "assets/build/js/app-template.js",
@@ -446,10 +446,10 @@ gulp.task('linker:dev', function () {
 
 gulp.task('linker:prod', function () {
     return gulp.src("views/layouts/**/*.ejs")
-        .pipe($$.inject(gulp.src("assets/build/js/app-pre.js", { read: false }), {
-            name: "app-pre",
-            transform: transformScript
-        }))
+        // .pipe($$.inject(gulp.src("assets/build/js/app-pre.js", { read: false }), {
+        //     name: "app-pre",
+        //     transform: transformScript
+        // }))
         .pipe($$.inject(gulp.src("assets/build/js/app.js", { read: false }), {
             name: "app",
             transform: transformScript
@@ -504,7 +504,7 @@ gulp.task('default', ['build', 'browser-sync'], function () {
 
 gulp.task('build', function (cb) {
     runSequence(
-        ['build:app-pre:dev', 'build:app:dev', 'build:app-lib', 'build:app-templates', 'build:sass:dev', 'build:sprites-svg:dev', 'serve:vue-app'],
+        [/*'build:app-pre:dev', */'build:app:dev', 'build:app-lib', 'build:app-templates', 'build:sass:dev', 'build:sprites-svg:dev', 'serve:vue-app'],
         ['serve:root', 'serve:newsletters', 'serve:images:dev', 'serve:build', 'serve:bower_components'],
         'linker:dev',
         cb
@@ -514,7 +514,7 @@ gulp.task('build', function (cb) {
 gulp.task('build-prod', function (cb) {
     runSequence(
         ['build:app-templates'],
-        ['build:app-pre:prod', 'build:app:prod', 'build:sass:prod', 'build:sprites-svg:prod', 'serve:vue-app'],
+        [/*'build:app-pre:prod', */'build:app:prod', 'build:sass:prod', 'build:sprites-svg:prod', 'serve:vue-app'],
         ['serve:root', 'serve:newsletters', 'serve:images:dev', 'serve:build', 'serve:bower_components'],
         ['linker:prod', 'cache-bust'],
         'compress',

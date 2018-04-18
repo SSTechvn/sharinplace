@@ -1,4 +1,4 @@
-/* global fbq, ga, google, moment, Modernizr */
+/* global fbq, ga, google, moment */
 
 (function () {
 
@@ -229,14 +229,6 @@
             // Layout
             // setAspectRatio should be called in a directive. Care with watch on scroll and resize...
             _setFlexboxAspectRatio("pics-grid", 0.5);  // ratio = (1.5 + 1.5) / (4 + 2)
-
-            // Touch detection is not reliable. We have to make UX consistent for all devices.
-            // if (window.screen.width < 640
-            //  || ((Modernizr.touchevents || Modernizr.pointerevents) && window.screen.width < 1280)
-            // ) {
-            //     // Allow native-like UX on mobiles and touch devices, with datepicker's date constraints
-            //     vm.inlineDatepicker = true;
-            // }
 
             var lang = platform.getLang();
             if (lang === 'en') {

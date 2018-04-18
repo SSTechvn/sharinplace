@@ -1,5 +1,3 @@
-/* global Modernizr */
-
 (function () {
 
     angular
@@ -95,9 +93,20 @@
             });
         }
 
+        function isLocalStorageSupported() {
+            var field = '__localstorage_test__';
+            try {
+                localStorage.setItem(field, field);
+                localStorage.removeItem(field);
+                return true;
+            } catch(e) {
+                return false;
+            }
+        }
+
         function getToken() {
             return $q(function (resolve/*, reject */) {
-                if (! Modernizr.localstorage) {
+                if (! isLocalStorageSupported()) {
                     resolve();
                     return;
                 }
@@ -114,7 +123,7 @@
 
         function setToken(newToken) {
             return $q(function (resolve/*, reject */) {
-                if (! Modernizr.localstorage) {
+                if (! isLocalStorageSupported()) {
                     resolve();
                     return;
                 }
@@ -128,7 +137,7 @@
 
         function unsetToken() {
             return $q(function (resolve/*, reject */) {
-                if (! Modernizr.localstorage) {
+                if (! isLocalStorageSupported()) {
                     resolve();
                     return;
                 }
@@ -196,7 +205,7 @@
             var config = StelaceConfig.getConfig();
 
             return enable
-                && (! isIE && Modernizr.localstorage && cookie.isCompatible())
+                && (! isIE && isLocalStorageSupported() && cookie.isCompatible())
                 && (config.social_login__facebook_complete
                     || config.social_login__google_complete
                 );
