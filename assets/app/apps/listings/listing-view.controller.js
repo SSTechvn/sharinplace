@@ -101,6 +101,7 @@
         vm.formatDate           = "dd/MM/yyyy";
         vm.calendarPlaceholder  = '';
         vm.showDate             = false;
+        vm.showTime             = false;
         vm.showIncorrectDates   = false;
         vm.dateErrorObject      = null;
         vm.disableBookingButton = false;
@@ -122,6 +123,8 @@
         vm.listQuantities = [];
         vm.selectedQuantityStr = '1';
         vm.selectedQuantity    = 1;
+        vm.listDurations = [];
+        vm.selectedDuration = null;
         vm.timeUnit = null;
 
         // Use autoblur directive on iOS to prevent browser UI toolbar and cursor from showing up on iOS Safari, despite readonly status
@@ -313,6 +316,9 @@
                 var maxDurationBooking;
                 if (vm.listingTypeProperties.isTimeFlexible) {
                     maxDurationBooking = vm.selectedListingType.config.bookingTime.maxDuration;
+
+                    _generateListDurations(maxDurationBooking, vm.timeUnit);
+                    vm.selectedDuration = vm.listDurations[0];
                 }
 
                 ListingService.populate(listing, {
@@ -374,7 +380,10 @@
                 vm.calendarReady = true;
                 vm.startDate = null;
                 vm.endDate   = null;
+                vm.startTime = null;
+                vm.bookingDuration = null
                 vm.showDate  = true;
+                vm.showTime = _.includes(['m', 'h'], vm.timeUnit);
                 $scope.$watch('vm.startDate', _promptEndDate, true);
 
                 galleryImgs  = createImgGallery(listing.medias);
@@ -535,6 +544,25 @@
         function _setQuantity(quantity) {
             vm.selectedQuantity = quantity;
             vm.selectedQuantityStr = '' + quantity;
+        }
+
+        function _generateListDurations(maxDuration, timeUnit) {
+            if (maxDuration === 0) { // should not happen
+                vm.listDurations = [];
+            } else {
+                vm.listDurations = _.map(_.range(1, maxDuration + 1), function (nbUnits) {
+                    var value = {};
+                    value[timeUnit] = nbUnits;
+
+                    return {
+                        value: value,
+                        label: $translate.instant('pricing.duration_value', {
+                            duration_hours: timeUnit === 'h' ? nbUnits : undefined,
+                            duration_minutes: timeUnit === 'm' ? nbUnits : undefined,
+                        })
+                    };
+                });
+            }
         }
 
         function _getAvailabilityGraph(listing, type) {

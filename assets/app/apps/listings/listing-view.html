@@ -220,30 +220,45 @@
                                     </div>
                                     <div class="datepicker-side datepicker-right"
                                         ng-if="vm.listingTypeProperties.isTimeFlexible">
-                                        <label for="popup-end-date"
-                                            data-translate="time.to_day_label">
-                                        </label>
-                                        <div class="input__inner-icon-container">
-                                            <input id="popup-end-date"
-                                                type="text"
-                                                ng-model="vm.endDate"
-                                                ng-click="vm.openDatepicker('end')"
-                                                ng-focus="vm.openDatepicker('end')"
-                                                ng-change="vm.displayTimeFlexiblePrice()"
-                                                uib-datepicker-popup="{{vm.formatDate}}"
-                                                data-datepicker-options="vm.endDateOptions"
-                                                data-datepicker-append-to-body="false"
-                                                data-is-open="vm.endDateOpened"
-                                                data-show-button-bar="false"
-                                                data-translate-attr="{ placeholder: 'time.end_label' }"
-                                                readonly
-                                                data-sip-autoblur="vm.iOS">
-                                            <div class="input__inner-icon icon-right cursor-pointer"
-                                                ng-class="{active: vm.endDateOpened}"
-                                                ng-click="vm.endDateOpened = ! vm.endDateOpened;">
-                                                <svg class="icon">
-                                                    <use xlink:href="/assets/build/icons/sprite.svg#calendar"></use>
-                                                </svg>
+                                        <div ng-if="!vm.showTime">
+                                            <label for="popup-end-date"
+                                                data-translate="time.to_day_label">
+                                            </label>
+                                            <div class="input__inner-icon-container">
+                                                <input id="popup-end-date"
+                                                    type="text"
+                                                    ng-model="vm.endDate"
+                                                    ng-click="vm.openDatepicker('end')"
+                                                    ng-focus="vm.openDatepicker('end')"
+                                                    ng-change="vm.displayTimeFlexiblePrice()"
+                                                    uib-datepicker-popup="{{vm.formatDate}}"
+                                                    data-datepicker-options="vm.endDateOptions"
+                                                    data-datepicker-append-to-body="false"
+                                                    data-is-open="vm.endDateOpened"
+                                                    data-show-button-bar="false"
+                                                    data-translate-attr="{ placeholder: 'time.end_label' }"
+                                                    readonly
+                                                    data-sip-autoblur="vm.iOS">
+                                                <div class="input__inner-icon icon-right cursor-pointer"
+                                                    ng-class="{active: vm.endDateOpened}"
+                                                    ng-click="vm.endDateOpened = ! vm.endDateOpened;">
+                                                    <svg class="icon">
+                                                        <use xlink:href="/assets/build/icons/sprite.svg#calendar"></use>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div ng-if="vm.showTime">
+                                            <label>
+                                                &nbsp;
+                                            </label>
+                                            <div id="popup-start-time"
+                                                class="book_timepicker"
+                                                ng-model="vm.startTime"
+                                                data-show-meridian="false"
+                                                data-show-seconds="false"
+                                                data-show-spinners="false"
+                                                uib-timepicker="{{vm.formatDate}}">
                                             </div>
                                         </div>
                                     </div>
@@ -277,6 +292,23 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+
+                                {{vm.selectedDuration}}
+
+                                <div ng-if="vm.listingTypeProperties.isTimeFlexible && vm.showTime"
+                                    class="flex-container flex--space-between flex--align-center margin-top margin-bottom">
+                                    <label for="duration-list" data-translate="pricing.duration"></label>
+                                    <select id="duration-list" class="select-duration"
+                                        ng-model="vm.selectedDuration"
+                                        ng-change="vm.changeDuration()"
+                                    >
+                                        <option ng-repeat="duration in vm.listDurations"
+                                            value="{{duration.value}}"
+                                        >
+                                            {{duration.label}}
+                                        </option>
+                                    </select>
                                 </div>
 
                                 <div ng-if="vm.listingTypeProperties.isAvailabilityStock"

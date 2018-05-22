@@ -2053,6 +2053,26 @@ pricing:
     quantity:
         en: Quantity
         fr: Quantité
+    duration:
+        en: Duration
+        fr: Durée
+    duration_value:
+        en: |
+            {duration_hours, select,
+                undefined {}
+                other {{duration_hours, number}h}
+            } {duration_minutes, select,
+                undefined {}
+                other {{duration_minutes, number}m}
+            }
+        fr: |
+            {duration_hours, select,
+                undefined {}
+                other {{duration_hours, number}h}
+            } {duration_minutes, select,
+                undefined {}
+                other {{duration_minutes, number}m}
+            }
 fraction:
     less_than_percent:
         en: 'Less than {hundredth, number, percent}'
